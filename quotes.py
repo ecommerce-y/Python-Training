@@ -4,6 +4,7 @@ The module for first_inside_quotes
 Ethan Yang
 7/9/2025
 '''
+# Add the function first_inside_quotes here
 
 def first_inside_quotes(s):
     """
@@ -24,5 +25,3 @@ def first_inside_quotes(s):
     a = s.index('"') + 1
     b = s.index('"', a)
     return s[a:b]
-
-# Add the function first_inside_quotes here
