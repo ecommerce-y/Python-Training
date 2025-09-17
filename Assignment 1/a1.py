@@ -6,7 +6,7 @@ simple currency exchange routine using an online currency service.
 The primary function in this module is exchange.
 
 Author: Ethan Yang, ey283
-Date:   THE DATE COMPLETED HERE
+Date:   09/17/25
 """
 
 def before_space(s):
@@ -26,8 +26,8 @@ def after_space(s):
     Parameter s: the string to slice
     Precondition: s is a string with at least one space
     """
-    first_space = s.rfind(' ') + 1
-    return s[first_space:]
+    first_space = s.find(' ')
+    return s[first_space+1:]
 
 def first_inside_quotes(s):
     """
@@ -105,10 +105,10 @@ def has_error(json):
     Parameter json: a json string to parse
     Precondition: json is the response to a currency query
     """
-    error_status = str('N/A' in json)
+    error_status = 'N/A' in json
     return error_status
 
-def currency_response(src, dst, amt):
+def currency_response(src,dst,amt):
     """
     Returns a JSON string that is a response to a currency query.
 
@@ -131,8 +131,40 @@ def currency_response(src, dst, amt):
     Parameter amt: amount of currency to convert
     Precondition: amt is a float
     """
-    amt_str = format(amt,'.20G')
-    url = 'https://cs1110.cs.cornell.edu/2025fa/a1/?old='+src+'&new='+dst+'&amt='+amt_str
+    amt_str = format(amt)
+    url = ('https://cs1110.cs.cornell.edu/2025fa/a1/?old='
+            +src+'&new='+dst+'&amt='+amt_str)
     from introcs import urlread
     response = urlread(url)
     return response
+
+def is_currency(code):
+    """
+    Returns: True if code is a valid (3 letter code for a) currency
+        It returns False otherwise.
+
+    Parameter code: the currency code to verify
+    Precondition: code is a string with no spaces or non-letters.
+    """
+    return not has_error(currency_response(code,code,1.0))
+
+def exchange(src, dst, amt):
+    """
+    Returns the amount of currency received in the given exchange.
+
+    In this exchange, the user is changing amt money in currency src to the
+    currency dst. The value returned represents the amount in currency dst.
+
+    The value returned has type float.
+
+    Parameter src: the currency on hand (the old value)
+    Precondition: src is a string for a valid currency code
+
+    Parameter dst: the currency to convert to (the new value)
+    Precondition: dst is a string for a valid currency code
+
+    Parameter amt: amount of currency to convert
+    Precondition: amt is a float
+    """
+    currency_response_new = get_new(currency_response(src,dst,amt))
+    return float(currency_response_new[:currency_response_new.index(' ')])
