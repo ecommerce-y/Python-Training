@@ -25,9 +25,25 @@ def test_asserts():
 
 def test_has_a_vowel():
     """
-    This is a test procedure for funcs
+    This is a test procedure for has_a_vowel
     """
     result = funcs.has_a_vowel('aeiou')
+    introcs.assert_equals(True,result)
+    result = funcs.has_a_vowel('bbb')
+    introcs.assert_equals(False,result)
+    result = funcs.has_a_vowel('eee')
+    introcs.assert_equals(True,result)
+    result = funcs.has_a_vowel('abc')
+    introcs.assert_equals(True,result)
+    result = funcs.has_a_vowel('e')
+    introcs.assert_equals(True,result)
+    result = funcs.has_a_vowel('uuu')
+    introcs.assert_equals(True,result)
+    result = funcs.has_a_vowel('y')
+    introcs.assert_equals(False,result)
+    result = funcs.has_a_vowel('i')
+    introcs.assert_equals(True,result)
+    result = funcs.has_a_vowel('o')
     introcs.assert_equals(True,result)
     print('Testing function has_a_vowel')
 
@@ -38,6 +54,7 @@ def test_quotes():
     """
     result = quotes.first_inside_quotes('"Yes," he said.')
     introcs.assert_equals(True,"Yes,")
+    result = quotes
     print('Testing function first_inside_quotes')
 
 # SCRIPT CODE (Call Test Procedures here)
