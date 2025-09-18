@@ -26,6 +26,11 @@ def remove_starting_vowel(w):
     Precondition: w is a nonempty string with only lowercase letters
     """
     if w  # STUB. Implement me
+    s = w[0]
+        if 'a' in s or 'e' in s or 'i' in s or 'o' in s or 'u' in s:
+            return w[1:]
+        else:
+            return w
 
 
 def pigify(w):
@@ -37,7 +42,19 @@ def pigify(w):
     Parameter w: the word to change to Pig Latin
     Precondition: w is a nonempty string with only lowercase letters
     """
-    pass # STUB. Implement me
+    s = w[0]
+    vowel_in_s = 'a' in s or 'e' in s or 'i' in s or 'o' in s or 'u' in s
+    vowel_and_q_in_s = 'a' in s or 'e' in s or 'i' in s or 'o' in s or 'u' in s or 'q' in s
+    vowel_in_w = 'a' in w or 'e' in w or 'i' in w or 'o' in w or 'u' in w
+    if vowel_in_s:
+        return w+'hay'
+    if 'q' in s:
+        return w[2:]+'quay'
+    if not(vowel_and_q_in_s) and vowel_in_w:
+        return w[first_vowel(w):]+w[0:first_vowel(w)]+'ay'
+    if not(vowel_and_q_in_s) ^ vowel_in_w:
+        return w+'ay'
+
 
 
 # THIS FUNCTION IS PROVIDED FOR YOU TO USE IN PIGIFY
