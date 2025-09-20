@@ -44,32 +44,86 @@ def count_char(s: str, ch: str) -> int:
 # ---------------------------
 
 def test_first_char():
-    assert first_char("cat") == "c"
-    assert first_char("A") == "A"
-    assert first_char("") == ""
+    """Test first_char function with various inputs."""
+    # Normal cases
+    assert first_char("cat") == "c", "Should return first char of 'cat'"
+    assert first_char("A") == "A", "Should return first char of single char string"
+    assert first_char("hello world") == "h", "Should return first char of longer string"
+    assert first_char("123") == "1", "Should work with numeric strings"
+    assert first_char("!@#") == "!", "Should work with special characters"
+    
+    # Edge cases
+    assert first_char("") == "", "Should return empty string for empty input"
+    assert first_char(" ") == " ", "Should return space if string starts with space"
 
 def test_last_char():
-    assert last_char("cat") == "t"
-    assert last_char("Z") == "Z"
-    assert last_char("") == ""
+    """Test last_char function with various inputs."""
+    # Normal cases
+    assert last_char("cat") == "t", "Should return last char of 'cat'"
+    assert last_char("Z") == "Z", "Should return last char of single char string"
+    assert last_char("hello world") == "d", "Should return last char of longer string"
+    assert last_char("123") == "3", "Should work with numeric strings"
+    assert last_char("!@#") == "#", "Should work with special characters"
+    
+    # Edge cases
+    assert last_char("") == "", "Should return empty string for empty input"
+    assert last_char(" ") == " ", "Should return space if string ends with space"
 
 def test_middle_slice():
-    assert middle_slice("abcdef", 1, 4) == "bcd"
-    assert middle_slice("hi", -5, 50) == "hi"
-    assert middle_slice("abc", 2, 2) == ""
-    assert middle_slice("abc", 3, 2) == ""
+    """Test middle_slice function with various slice ranges."""
+    # Normal slicing
+    assert middle_slice("abcdef", 1, 4) == "bcd", "Should slice middle portion correctly"
+    assert middle_slice("hello", 0, 3) == "hel", "Should slice from beginning"
+    assert middle_slice("world", 2, 5) == "rld", "Should slice to end"
+    assert middle_slice("python", 1, 6) == "ython", "Should handle end index at string length"
+    
+    # Edge cases with clipping
+    assert middle_slice("hi", -5, 50) == "hi", "Should clip negative start and large end"
+    assert middle_slice("test", -2, 3) == "tes", "Should clip negative start index"
+    assert middle_slice("code", 1, 10) == "ode", "Should clip large end index"
+    
+    # Empty result cases
+    assert middle_slice("abc", 2, 2) == "", "Should return empty when start equals end"
+    assert middle_slice("abc", 3, 2) == "", "Should return empty when start > end"
+    assert middle_slice("", 0, 5) == "", "Should return empty for empty string"
+    assert middle_slice("test", 5, 10) == "", "Should return empty when start beyond string"
 
 def test_repeat_text():
-    assert repeat_text("ha", 3) == "hahaha"
-    assert repeat_text("x", 1) == "x"
-    assert repeat_text("no", 0) == ""
-    assert repeat_text("no", -2) == ""
+    """Test repeat_text function with various repetition counts."""
+    # Normal repetition
+    assert repeat_text("ha", 3) == "hahaha", "Should repeat 'ha' three times"
+    assert repeat_text("x", 1) == "x", "Should return original string when n=1"
+    assert repeat_text("abc", 2) == "abcabc", "Should repeat longer string correctly"
+    assert repeat_text("!", 5) == "!!!!!", "Should repeat special characters"
+    
+    # Edge cases
+    assert repeat_text("no", 0) == "", "Should return empty string when n=0"
+    assert repeat_text("no", -2) == "", "Should return empty string when n<0"
+    assert repeat_text("", 5) == "", "Should return empty string when input is empty"
+    assert repeat_text("test", -1) == "", "Should handle negative repetition count"
 
 def test_count_char():
-    assert count_char("banana", "a") == 3
-    assert count_char("banana", "b") == 1
-    assert count_char("banana", "na") == 0
-    assert count_char("", "a") == 0
+    """Test count_char function with various characters and strings."""
+    # Normal counting
+    assert count_char("banana", "a") == 3, "Should count 3 'a's in 'banana'"
+    assert count_char("banana", "b") == 1, "Should count 1 'b' in 'banana'"
+    assert count_char("banana", "n") == 2, "Should count 2 'n's in 'banana'"
+    assert count_char("hello", "l") == 2, "Should count repeated characters"
+    assert count_char("python", "y") == 1, "Should count single occurrence"
+    
+    # No matches
+    assert count_char("banana", "z") == 0, "Should return 0 for character not in string"
+    assert count_char("", "a") == 0, "Should return 0 for empty string"
+    assert count_char("test", "x") == 0, "Should return 0 when character not found"
+    
+    # Invalid input cases
+    assert count_char("banana", "na") == 0, "Should return 0 for multi-character input"
+    assert count_char("test", "") == 0, "Should return 0 for empty character"
+    assert count_char("hello", "abc") == 0, "Should return 0 for string longer than 1 char"
+    
+    # Case sensitivity
+    assert count_char("Hello", "h") == 0, "Should be case sensitive (lowercase h not in Hello)"
+    assert count_char("Hello", "H") == 1, "Should be case sensitive (uppercase H in Hello)"
 
 
 # ---------------------------
