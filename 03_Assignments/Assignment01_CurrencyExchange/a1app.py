@@ -16,6 +16,7 @@ dst = str(input('Enter target currency: '))
 amt = float(input('Enter original amount: '))
 
 amt_new = str(a1.exchange(src,dst,amt))
-response = 'You can exchange '+amt+' '+src+' for '+amt_new+' '+dst+'.'
+
+response = 'You can exchange '+str(amt)+' '+src+' for '+amt_new+' '+dst+'.'
 
 print(response)

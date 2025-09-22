@@ -168,7 +168,9 @@ def testA():
     result = a1.after_space('hello ')
     introcs.assert_equals('',result)
 
-    
+    # Test multiple spaces at the beginning
+    result = a1.after_space('   uno reverse')
+    introcs.assert_equals('  uno reverse', result)
 
 def testB():
     """
