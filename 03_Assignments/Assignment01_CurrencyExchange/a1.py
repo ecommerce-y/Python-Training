@@ -167,4 +167,4 @@ def exchange(src, dst, amt):
     Precondition: amt is a float
     """
     currency_response_new = get_new(currency_response(src,dst,amt))
-    return float(currency_response_new[:currency_response_new.index(' ')])
+    return float(before_space(currency_response_new))

@@ -86,7 +86,19 @@ def testA():
     result = a1.before_space('one dollar  ')
     introcs.assert_equals('one', result)
 
+    # string with two spaces
+    result = a1.before_space('  ')
+    introcs.assert_equals('',result)
+
     print('Testing function after_space')
+
+    # word preceded by single space
+    result = a1.after_space(' hello')
+    introcs.assert_equals('hello',result)
+
+    # string with two spaces
+    result = a1.after_space('  ')
+    introcs.assert_equals(' ',result)
 
     # single character, space, then word
     result = a1.after_space('1 dollar')
@@ -147,6 +159,16 @@ def testA():
     # word preceded by multiple spaces
     result = a1.after_space('  one')
     introcs.assert_equals(' one',result)
+
+    # multiple single spaces distributed between words
+    result = a1.after_space('one dollar foo')
+    introcs.assert_equals('dollar foo',result)
+
+    # string with space at the end
+    result = a1.after_space('hello ')
+    introcs.assert_equals('',result)
+
+    
 
 def testB():
     """
