@@ -410,6 +410,21 @@ def testC():
     introcs.assert_equals('{ "old":"0 Ukrainian Hryvni", "new":"0 São Tomé and '
         'Príncipe Dobras", "status":"Success" }',result)
 
+    # currency exchanges with both invalid currencies
+    result = a1.currency_response('ABC','ABC',1.0)
+    introcs.assert_equals('{ "old":"N/A", "new":"N/A",'
+    ' "status":"Source currency code is invalid." }',result)
+
+    # currency exchanges with invalid source currency
+    result = a1.currency_response('ABC','CAD',1.0)
+    introcs.assert_equals('{ "old":"N/A", "new":"N/A",'
+    ' "status":"Source currency code is invalid." }',result)
+
+    # currency exchanges with invalid destination currency
+    result = a1.currency_response('USD','ABC',1.0)
+    introcs.assert_equals('{ "old":"N/A", "new":"N/A", '
+    '"status":"Exchange currency code is invalid." }',result)
+
 def testD():
     """
     Test procedure for Part D: is_currency, exchange
