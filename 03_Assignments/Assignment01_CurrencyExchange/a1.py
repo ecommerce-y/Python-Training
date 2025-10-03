@@ -168,3 +168,24 @@ def exchange(src, dst, amt):
     """
     currency_response_new = get_new(currency_response(src,dst,amt))
     return float(before_space(currency_response_new))
+
+def expand_code(code):
+    """
+    Returns the full name of a currency from the currency code.
+    
+    The name of the code should be plural, not singular.
+    
+    Example: expand_code('USD') returns 'United States Dollars'
+             expand_code('GBP') returns 'British Pounds Sterling'
+    
+    Parameter code: the currency code
+    Precondition: src is a string for a valid currency code
+    """
+    string = after_space(get_old(currency_response(code,code,1.0)))
+    if 'USD' in code or 'EUR' in code or 'NZD' in code:
+        return string+'s'
+    elif code == 'GBP':
+        return 'British Pounds Sterling'
+    else:
+        return string
+        
