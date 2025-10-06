@@ -34,29 +34,72 @@ def test_str5():
     """
     Test function str5
     """
-    introcs.assert_equals('130.6',  a3.str5(130.59))
-    introcs.assert_equals('130.5',  a3.str5(130.54))
-    introcs.assert_equals('100.0',  a3.str5(100))
-    introcs.assert_equals('100.6',  a3.str5(100.56))
-    introcs.assert_equals('99.57',  a3.str5(99.566))
-    introcs.assert_equals('99.99',  a3.str5(99.99))
-    introcs.assert_equals('100.0',  a3.str5(99.995))
-    introcs.assert_equals('22.00',  a3.str5(21.99575))
-    introcs.assert_equals('21.99',  a3.str5(21.994))
-    introcs.assert_equals('10.01',  a3.str5(10.013567))
-    introcs.assert_equals('10.00',  a3.str5(10.000000005))
-    introcs.assert_equals('10.00',  a3.str5(9.9999))
-    introcs.assert_equals('9.999',  a3.str5(9.9993))
-    introcs.assert_equals('1.355',  a3.str5(1.3546))
-    introcs.assert_equals('1.354',  a3.str5(1.3544))
-    introcs.assert_equals('0.046',  a3.str5(.0456))
-    introcs.assert_equals('0.045',  a3.str5(.0453))
-    introcs.assert_equals('0.006',  a3.str5(.0056))
-    introcs.assert_equals('0.001',  a3.str5(.0013))
-    introcs.assert_equals('0.000',  a3.str5(.0004))
-    introcs.assert_equals('0.001',  a3.str5(.0009999))
-    introcs.assert_equals('0.000',  a3.str5(1e-9))
 
+    # Rounding up a 6 char input
+    introcs.assert_equals('130.6',  a3.str5(130.59))
+
+    # Rounding down a 5 char input
+    introcs.assert_equals('130.5',  a3.str5(130.54))
+
+    # Expanding 4 charachter input to 5
+    introcs.assert_equals('100.0',  a3.str5(100))
+
+    # Rounding up another 6 character input (round-up from 6)
+    introcs.assert_equals('100.6',  a3.str5(100.56))
+
+    # Rounding up a 7 character input with rounding up happening in index 4 
+    introcs.assert_equals('99.57',  a3.str5(99.566))
+
+    # Testing 5 character input so no rounding
+    introcs.assert_equals('99.99',  a3.str5(99.99))
+
+    # Testing rounding up that carries digits.
+    introcs.assert_equals('100.0',  a3.str5(99.995))
+
+    # Rounding up with carrying with many decimals beyond 5 char limit
+    introcs.assert_equals('22.00',  a3.str5(21.99575))
+
+    # Rounding down to a .99 decimal
+    introcs.assert_equals('21.99',  a3.str5(21.994))
+
+    # Rounding down with many decimals beyond the the 5 char limit
+    introcs.assert_equals('10.01',  a3.str5(10.013567))
+
+    # Rounding down with a number + a very small decimal
+    introcs.assert_equals('10.00',  a3.str5(10.000000005))
+
+    # Rounding down to a ...999 from a 6 char input
+    introcs.assert_equals('10.00',  a3.str5(9.9999))
+
+    # Rounding down to a ...999 from a 6 char input
+    introcs.assert_equals('9.999',  a3.str5(9.9993))
+
+    # Rounding up at the thousandths place
+    introcs.assert_equals('1.355',  a3.str5(1.3546))
+
+    # Rounding down at the thousandths place
+    introcs.assert_equals('1.354',  a3.str5(1.3544))
+
+    # Round up decimal value from 6 character input that starts without a leading 0
+    introcs.assert_equals('0.046',  a3.str5(.0456))
+
+    # Round down decimal value from 6 character input that starts without a leading 0
+    introcs.assert_equals('0.045',  a3.str5(.0453))
+
+    # Round up to a decimal value from 6 character input
+    introcs.assert_equals('0.006',  a3.str5(.0056))
+
+    # Round down to a decimal value from 6 character input
+    introcs.assert_equals('0.001',  a3.str5(.0013))
+
+    # Round down to 0.000 from 6 character input
+    introcs.assert_equals('0.000',  a3.str5(.0004))
+
+    # Rounding up with carry through many 9s
+    introcs.assert_equals('0.001',  a3.str5(.0009999))
+
+    # Extremely small value in scientigic notation
+    introcs.assert_equals('0.000',  a3.str5(1e-9))
 
 def test_str5_color():
     """
