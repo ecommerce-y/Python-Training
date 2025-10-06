@@ -4,8 +4,8 @@ Unit Test for Assignment A3
 This module implements several test cases for a3.  It is incomplete. You should 
 look though this file for places to add tests.
 
-YOUR NAME(S) AND NETID(S) HERE
-DATE COMPLETED HERE
+Ethan Yang, ey283
+10/08/2025
 """ 
 import introcs
 import a3
