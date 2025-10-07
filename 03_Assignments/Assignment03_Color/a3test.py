@@ -139,7 +139,7 @@ def test_str5():
     # testing 4 character length with decimal
     introcs.assert_equals('1.000', a3.str5(1.00))
 
-    # testing single charater nodec
+    # testing single charater nodecimal
     introcs.assert_equals('1.000', a3.str5(1))
 
     # testing 2 charater nodec
@@ -177,20 +177,20 @@ def test_str5_color():
     # Tests for str5_hsv (add two)
 
     # rounding with carrying with different positions
-    text = a3.str5_hsv(introcs.HSV(359.999, 99.995, 0.0049))
-    introcs.assert_equals('(360.0, 100.0, 0.005)', text)
-
-    # everything too short
-    text = a3.str5_hsv(introcs.HSV(1.0, 2.12, 0.0))
-    introcs.assert_equals('(1.000, 2.120, 0.000)', text)
-
-    # everything too long
-    text = a3.str5_hsv(introcs.HSV(312.987654, 88.12345678, 0.0000499))
-    introcs.assert_equals('(313.0, 88.12, 0.000)', text)
+    text = a3.str5_hsv(introcs.HSV(359.999, 0.00066, 0.0049))
+    introcs.assert_equals('(360.0, 0.001, 0.005)', text)
 
     # with scientific notation
     text = a3.str5_hsv(introcs.HSV(1e-05, 2.345e-06, 9.9995e-05))
     introcs.assert_equals('(0.000, 0.000, 0.000)', text)
+
+    # everything too short
+    text = a3.str5_hsv(introcs.HSV(312.987654, 2.345e-06, 9.9995e-05))
+    introcs.assert_equals('(313.0, 0.000, 0.000)', text)
+
+    # everything too long
+    text = a3.str5_hsv(introcs.HSV(312.987654, 0.12345678, 0.0000499))
+    introcs.assert_equals('(313.0, 0.123, 0.000)', text)
 
 def test_rgb_to_cmyk():
     """
@@ -199,6 +199,7 @@ def test_rgb_to_cmyk():
     print('Testing rgb_to_cmyk')
 
     # The function should guarantee accuracy to three decimal places
+
     rgb = introcs.RGB(255, 255, 255)
     cmyk = a3.rgb_to_cmyk(rgb)
     introcs.assert_equals(0.0, round(cmyk.cyan,3))
@@ -220,6 +221,13 @@ def test_rgb_to_cmyk():
     introcs.assert_equals(24.424, round(cmyk.yellow,3))
     introcs.assert_equals(14.902, round(cmyk.black,3))
 
+    # making sure div by 0 doesnt break it
+    rgb = introcs.RBG(1, 1, 1)
+    cmyk = a3.rgb_to_cmyk(rbg)
+    introcs.assert_equals(0.000, round(cmyk.cyan,3))
+    introcs.assert_equals(0.000, round(cmyk.magenta,3))
+    introcs.assert_equals(0.000, round(cmyk.yellow,3))
+    introcs.assert_equals(100.0, round(cmyk.black,3))
 
 def test_cmyk_to_rgb():
     """

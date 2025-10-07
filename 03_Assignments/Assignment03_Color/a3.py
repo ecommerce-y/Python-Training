@@ -142,30 +142,29 @@ def rgb_to_cmyk(rgb):
     """
     # The RGB numbers are in the range 0..255.
     # Change them to the range 0..1 by dividing them by 255.0.
-    R = rgb.red / 255.0
-    G = rgb.green / 255.0
-    B = rgb.blue / 255.0
-    if R >= G and R >= B:
-        mx = R
-    elif G >= R and G >= B:
-        mx = G
+    r = rgb.red / 255.0
+    g = rgb.green / 255.0
+    b = rgb.blue / 255.0
+    if r >= g and r >= b:
+        mx = r
+    elif g >= r and g >= b:
+        mx = g
     else:
-        mx = B
-    K = 1 - mx
+        mx = b
+    k = 1 - mx
     try:
-        C = (1 - R - K) / (1 - K)
-        M = (1 - G - K) / (1 - K)
-        Y = (1 - B - K) / (1 - K)
+        c = (1 - r - k) / (1 - k)
+        m = (1 - g - k) / (1 - k)
+        y = (1 - b - k) / (1 - k)
     except:
-        C = 0.0
-        M = 0.0
-        Y = 0.0
-    C = C * 100
-    M = M * 100
-    Y = Y * 100
-    K = K * 100
-    return introcs.CMYK(C, M, Y, K)
-
+        c = 0.0
+        m = 0.0
+        y = 0.0
+    c = c * 100
+    m = m * 100
+    y = y * 100
+    k = k * 100
+    return introcs.CMYK(c, m, y, k)
 
 def cmyk_to_rgb(cmyk):
     """
@@ -178,8 +177,10 @@ def cmyk_to_rgb(cmyk):
     """
     # The CMYK numbers are in the range 0.0..100.0.
     # Deal with them the same way as the RGB numbers in rgb_to_cmyk()
-    pass
-
+    r = 255 * (1 - cmyk.cyan) * (1 - cmyk.black)
+    g = 255 * (1 - cmyk.magenta) * (1 - cmyk.magenta)
+    b = 255 * (1 - cmyk.yellow) * (1 - cmyk.black)
+    return introcs.RGB(r, g, b)
 
 def rgb_to_hsv(rgb):
     """
