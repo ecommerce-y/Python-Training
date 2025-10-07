@@ -101,8 +101,11 @@ def str5_cmyk(cmyk):
     Parameter cmyk: the color to convert to a string
     Precondition: cmyk is an CMYK object.
     """
-    t = cmyk
-    return '(' + str5(t.Cyan) + ', ' + str5(t.Magenta) + ', ' + str5(t.Yellow)  + ', ' + str5(t.Black) + ')'
+    c = cmyk.cyan
+    m = cmyk.magenta
+    y = cmyk.yellow
+    k = cmyk.black
+    return '(' + str5(c) + ', ' + str5(m) + ', ' + str5(y)  + ', ' + str5(k) + ')'
 
 
 def str5_hsv(hsv):
@@ -122,7 +125,10 @@ def str5_hsv(hsv):
     Parameter hsv: the color to convert to a string
     Precondition: hsv is an HSV object.
     """
-    pass
+    h = hsv.hue
+    s = hsv.saturation
+    v = hsv.value
+    return '(' + str5(h) + ', ' + str5(s) + ', ' + str5(v) + ')'
 
 
 def rgb_to_cmyk(rgb):
@@ -136,7 +142,29 @@ def rgb_to_cmyk(rgb):
     """
     # The RGB numbers are in the range 0..255.
     # Change them to the range 0..1 by dividing them by 255.0.
-    pass
+    R = rgb.red / 255.0
+    G = rgb.green / 255.0
+    B = rgb.blue / 255.0
+    if R >= G and R >= B:
+        mx = R
+    elif G >= R and G >= B:
+        mx = G
+    else:
+        mx = B
+    K = 1 - mx
+    try:
+        C = (1 - R - K) / (1 - K)
+        M = (1 - G - K) / (1 - K)
+        Y = (1 - B - K) / (1 - K)
+    except:
+        C = 0.0
+        M = 0.0
+        Y = 0.0
+    C = C * 100
+    M = M * 100
+    Y = Y * 100
+    K = K * 100
+    return introcs.CMYK(C, M, Y, K)
 
 
 def cmyk_to_rgb(cmyk):

@@ -1,12 +1,12 @@
-""" 
+"""
 Unit Test for Assignment A3
 
-This module implements several test cases for a3.  It is incomplete. You should 
+This module implements several test cases for a3.  It is incomplete. You should
 look though this file for places to add tests.
 
 Ethan Yang, ey283
 10/08/2025
-""" 
+"""
 import introcs
 import a3
 
@@ -16,13 +16,13 @@ def test_complement():
     Test function complement
     """
     print('Testing complement')
-    
+
     # One test is really good enough here
     comp = a3.complement_rgb(introcs.RGB(250, 0, 71))
     introcs.assert_equals(255-250, comp.red)
     introcs.assert_equals(255-0,   comp.green)
     introcs.assert_equals(255-71,  comp.blue)
-    
+
     # One more for good measure
     comp = a3.complement_rgb(introcs.RGB(128, 64, 255))
     introcs.assert_equals(255-128, comp.red)
@@ -34,6 +34,7 @@ def test_str5():
     """
     Test function str5
     """
+    print('testing str5')
 
     # Rounding up a 6 char input
     introcs.assert_equals('130.6',  a3.str5(130.59))
@@ -47,7 +48,7 @@ def test_str5():
     # Rounding up another 6 character input (round-up from 6)
     introcs.assert_equals('100.6',  a3.str5(100.56))
 
-    # Rounding up a 7 character input with rounding up happening in index 4 
+    # Rounding up a 7 character input with rounding up happening in index 4
     introcs.assert_equals('99.57',  a3.str5(99.566))
 
     # Testing 5 character input so no rounding
@@ -101,29 +102,102 @@ def test_str5():
     # Extremely small value in scientigic notation
     introcs.assert_equals('0.000',  a3.str5(1e-9))
 
+    # expand minimum value 0, only 1 character
+    introcs.assert_equals('0.000', a3.str5(0))
+
+    # cut off minimum value with too many extra 0s
+    introcs.assert_equals('0.000', a3.str5(0.0000000))
+
+    # expand maximum value with no extra characters
+    introcs.assert_equals('360.0', a3.str5(360))
+
+    # expand maximum value with lots of extra 0s
+    introcs.assert_equals('360.0', a3.str5(360.0000000))
+
+    #round up to maximum value
+    introcs.assert_equals('360.0', a3.str5(359.99999))
+
+    # 9 to 10 transition (moving decimal place)
+    introcs.assert_equals('10.00', a3.str5(9.9999))
+
+    # 99 to 100 transition (moving dec places)
+    introcs.assert_equals('100.0', a3.str5(99.995))
+
+    # single non-zero interger input
+    introcs.assert_equals('5.000', a3.str5(5))
+
+    # integer input with 2 characters
+    introcs.assert_equals('50.00', a3.str5(50))
+
+    # three char integer
+    introcs.assert_equals('100.0', a3.str5(100))
+
+    # testing 3 character length with decimal
+    introcs.assert_equals('1.000', a3.str5(1.0))
+    # testing 2 character length with decimal
+    introcs.assert_equals('0.100', a3.str5(0.1))
+    # testing 4 character length with decimal
+    introcs.assert_equals('1.000', a3.str5(1.00))
+
+    # testing single charater nodec
+    introcs.assert_equals('1.000', a3.str5(1))
+
+    # testing 2 charater nodec
+    introcs.assert_equals('11.00', a3.str5(11))
+
+    # testing 3 charater no dec
+    introcs.assert_equals('111.0', a3.str5(111))
+
+    # dnnt change 5 character input ending with 99
+    introcs.assert_equals('9.999',  a3.str5(9.999))
+
+    # don't change 5 character input with .5 edge
+    introcs.assert_equals('20.50',  a3.str5(20.50))
+
+    # tie at 4th decimal
+    introcs.assert_equals('2.235',  a3.str5(2.2345))
+
+    # a tie at the 3rd decimal
+    introcs.assert_equals('12.35',  a3.str5(12.345))
+
 def test_str5_color():
     """
     Test the str5 functions for cmyk and hsv.
     """
     print('Testing str5_cmyk and str5_hsv')
-    
+
     # Tests for str5_cmyk
     # We need to make sure the coordinates round properly
     text = a3.str5_cmyk(introcs.CMYK(98.448, 25.362, 72.8, 1.0))
     introcs.assert_equals('(98.45, 25.36, 72.80, 1.000)',text)
-    
+
     text = a3.str5_cmyk(introcs.CMYK(0.0, 1.5273, 100.0, 57.846))
     introcs.assert_equals('(0.000, 1.527, 100.0, 57.85)',text)
-    
+
     # Tests for str5_hsv (add two)
 
+    # rounding with carrying with different positions
+    text = a3.str5_hsv(introcs.HSV(359.999, 99.995, 0.0049))
+    introcs.assert_equals('(360.0, 100.0, 0.005)', text)
+
+    # everything too short
+    text = a3.str5_hsv(introcs.HSV(1.0, 2.12, 0.0))
+    introcs.assert_equals('(1.000, 2.120, 0.000)', text)
+
+    # everything too long
+    text = a3.str5_hsv(introcs.HSV(312.987654, 88.12345678, 0.0000499))
+    introcs.assert_equals('(313.0, 88.12, 0.000)', text)
+
+    # with scientific notation
+    text = a3.str5_hsv(introcs.HSV(1e-05, 2.345e-06, 9.9995e-05))
+    introcs.assert_equals('(0.000, 0.000, 0.000)', text)
 
 def test_rgb_to_cmyk():
     """
     Test translation function rgb_to_cmyk
     """
     print('Testing rgb_to_cmyk')
-    
+
     # The function should guarantee accuracy to three decimal places
     rgb = introcs.RGB(255, 255, 255)
     cmyk = a3.rgb_to_cmyk(rgb)
@@ -131,14 +205,14 @@ def test_rgb_to_cmyk():
     introcs.assert_equals(0.0, round(cmyk.magenta,3))
     introcs.assert_equals(0.0, round(cmyk.yellow,3))
     introcs.assert_equals(0.0, round(cmyk.black,3))
-    
+
     rgb = introcs.RGB(0, 0, 0)
     cmyk = a3.rgb_to_cmyk(rgb)
     introcs.assert_equals(0.0, round(cmyk.cyan,3))
     introcs.assert_equals(0.0, round(cmyk.magenta,3))
     introcs.assert_equals(0.0, round(cmyk.yellow,3))
     introcs.assert_equals(100.0, round(cmyk.black,3))
-        
+
     rgb = introcs.RGB(217, 43, 164)
     cmyk = a3.rgb_to_cmyk(rgb)
     introcs.assert_equals(0.0, round(cmyk.cyan,3))
@@ -176,54 +250,54 @@ def test_contrast_value():
     Test translation function contrast_value
     """
     print('Testing contrast_value')
-    
+
     # contrast == -1.0 (extreme)
     result = a3.contrast_value(0.0,0.0)
     introcs.assert_floats_equal(0.5,result)
-    
+
     result = a3.contrast_value(1.0,0.0)
     introcs.assert_floats_equal(0.5,result)
-    
+
     # contrast < 0.5, bottom part of sawtooth
     result = a3.contrast_value(0.1,0.25)
     introcs.assert_floats_equal(0.3,result)
-    
+
     # contrast < 0.5, middle of sawtooth
     result = a3.contrast_value(0.4,0.3)
     introcs.assert_floats_equal(0.4571429,result)
-    
+
     # contrast < 0.5, upper part of sawtooth
     result = a3.contrast_value(0.9,0.35)
     introcs.assert_floats_equal(0.8142857,result)
-    
+
     # contrast == 0.5, bottom part of sawtooth
     result = a3.contrast_value(0.1,0.5)
     introcs.assert_floats_equal(0.1,result)
-    
+
     # contrast == 0.5, middle of sawtooth
     result = a3.contrast_value(0.6,0.5)
     introcs.assert_floats_equal(0.6,result)
-    
+
     # contrast == 0.5, middle part of sawtooth
     result = a3.contrast_value(0.9,0.5)
     introcs.assert_floats_equal(0.9,result)
-    
+
     # contrast > 0, upper part of sawtooth
     result = a3.contrast_value(0.1,0.65)
     introcs.assert_floats_equal(0.05384615,result)
-    
+
     # contrast > 0, upper of sawtooth
     result = a3.contrast_value(0.4,0.75)
     introcs.assert_floats_equal(0.2,result)
-    
+
     # contrast > 0, upper part of sawtooth
     result = a3.contrast_value(0.9,0.7)
     introcs.assert_floats_equal(0.95714286,result)
-    
+
     # contrast == 1.0 (extreme)
     result = a3.contrast_value(0.2,1.0)
     introcs.assert_floats_equal(0.0,result)
-    
+
     result = a3.contrast_value(0.6,1.0)
     introcs.assert_floats_equal(1.0,result)
 
@@ -233,14 +307,14 @@ def test_contrast_rgb():
     Test translation function contrast_value
     """
     print('Testing contrast_rgb')
-    
+
     # Darkening (less than 0.5) contrast
     rgb = introcs.RGB(240, 15, 118)
     hsv = a3.contrast_rgb(rgb,0.3)
     introcs.assert_equals(220, rgb.red)
     introcs.assert_equals(35,  rgb.green)
     introcs.assert_equals(123, rgb.blue)
-    
+
     # ADD TWO MORE TESTS
 
 
