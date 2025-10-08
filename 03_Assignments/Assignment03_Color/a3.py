@@ -144,12 +144,7 @@ def rgb_to_cmyk(rgb):
     r = float(rgb.red / 255.0)
     g = float(rgb.green / 255.0)
     b = float(rgb.blue / 255.0)
-    if r >= g and r >= b:
-        mx = r
-    elif g >= r and g >= b:
-        mx = g
-    else:
-        mx = b
+    mx = max(r, g, b)
     k = 1 - mx
     if k == 1:
         c = 0.0
@@ -196,7 +191,30 @@ def rgb_to_hsv(rgb):
     """
     # The RGB numbers are in the range 0..255.
     # Change them to range 0..1 by dividing them by 255.0.
+    r = float(rgb.red / 255.0)
+    g = float(rgb.green / 255.0)
+    b = float(rgb.blue / 255.0)
+    mx = max(r, g, b)
+    mn = min(r, g, b)
+    d = mx - mn
+    v = mx
 
+    if mx == mn:
+        h = 0.0
+    elif mx == r and g >= b:
+        h = 60.0 * ((g - b) / (mx - mn))
+    elif mx == r and g < b:
+        h = 60.0 * ((g - b) / (mx - mn)) + 360.0
+    elif mx == g:
+        h = 60.0 * ((b - r) / (mx - mn)) + 120.0
+    else:  # mx == b
+        h = 60.0 * ((r - g) / (mx - mn)) + 240.0
+    if mx == 0:
+        s = 0
+    else:
+        s = 1 - (mn / mx)
+
+    return introcs.HSV(h, s, v)
 
 def hsv_to_rgb(hsv):
     """
@@ -207,8 +225,46 @@ def hsv_to_rgb(hsv):
     Parameter hsv: the color to convert to a RGB object
     Precondition: hsv is an HSV object.
     """
-    pass
+    h = hsv.hue
+    s = hsv.saturation
+    v = hsv.value
+    hi = int(h // 60)
+    f = (h % 60) / 60
+    p = v * (1 - s)
+    q = v * (1 - f * s)
+    t = v * (1 - (1 - f) * s)
 
+    if hi == 0 or hi == 5:
+        r = v
+    elif hi == 1:
+        r = q
+    elif hi == 2 or hi == 3:
+        r = p
+    else:
+        r = t
+
+    if hi == 0:
+        g = t
+    elif hi == 1 or hi == 2:
+        g = v
+    elif hi == 3:
+        g = q
+    else:
+        g = p
+
+    if hi == 0 or hi == 1:
+        b = p
+    elif hi == 2:
+        b = t
+    elif hi == 3 or hi == 4:
+        b = v
+    else:
+        b = q
+
+    r = int(round(r * 255))
+    g = int(round(g * 255))
+    b = int(round(b * 255))
+    return introcs.RGB(r, g, b)
 
 def contrast_value(value,contrast):
     """

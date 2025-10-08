@@ -387,16 +387,202 @@ def test_rgb_to_hsv():
     Test translation function rgb_to_hsv
     """
     print('Testing rgb_to_hsv')
-    # ADD TESTS TO ME
 
+    # if max = min
+    rgb = introcs.RGB(50, 50, 50)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(0.0, round(hsv.hue,3))
+    introcs.assert_equals(0.0, round(hsv.saturation,3))
+    introcs.assert_equals(0.196, round(hsv.value,3))
+
+    # if max = r and g >= b
+    rgb = introcs.RGB(67, 12, 9)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(3.103, round(hsv.hue,3))
+    introcs.assert_equals(0.866, round(hsv.saturation,3))
+    introcs.assert_equals(0.263, round(hsv.value,3))
+
+    # if max = r and g < b
+    rgb = introcs.RGB(255, 54, 59)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(358.507, round(hsv.hue,3))
+    introcs.assert_equals(0.788, round(hsv.saturation,3))
+    introcs.assert_equals(1.0, round(hsv.value,3))
+
+
+    # what if max = b
+    rgb = introcs.RGB(50, 100, 200)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(220.0, round(hsv.hue,3))
+    introcs.assert_equals(0.75, round(hsv.saturation,3))
+    introcs.assert_equals(0.784, round(hsv.value,3))
+
+    # if max = g
+    rgb = introcs.RGB(1, 2, 254)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(239.763, round(hsv.hue,3))
+    introcs.assert_equals(0.996, round(hsv.saturation,3))
+    introcs.assert_equals(0.996, round(hsv.value,3))
+
+    # if max = 0. make it handles potential div by 0 correctly also test black
+    rgb = introcs.RGB(0, 0, 0)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(0.0, round(hsv.hue,3))
+    introcs.assert_equals(0.0, round(hsv.saturation,3))
+    introcs.assert_equals(0.0, round(hsv.value,3))
+
+    # all max rgb
+    rgb = introcs.RGB(255, 255, 255)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(0.0, round(hsv.hue,3))
+    introcs.assert_equals(0.0, round(hsv.saturation,3))
+    introcs.assert_equals(1.0, round(hsv.value,3))
+
+    # red
+    rgb = introcs.RGB(255, 0, 0)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(0.0, round(hsv.hue,3))
+    introcs.assert_equals(1.0, round(hsv.saturation,3))
+    introcs.assert_equals(1.0, round(hsv.value,3))
+
+    # green
+    rgb = introcs.RGB(0, 255, 0)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(120.0, round(hsv.hue,3))
+    introcs.assert_equals(1.0, round(hsv.saturation,3))
+    introcs.assert_equals(1.0, round(hsv.value,3))
+
+    # blue
+    rgb = introcs.RGB(0, 0, 255)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(240.0, round(hsv.hue,3))
+    introcs.assert_equals(1.0, round(hsv.saturation,3))
+    introcs.assert_equals(1.0, round(hsv.value,3))
+
+    # all rgb in the middle
+    rgb = introcs.RGB(128, 128, 128)
+    hsv = a3.rgb_to_hsv(rgb)
+    introcs.assert_equals(0.0, round(hsv.hue,3))
+    introcs.assert_equals(0.0, round(hsv.saturation,3))
+    introcs.assert_equals(0.502, round(hsv.value,3))
 
 def test_hsv_to_rgb():
     """
     Test translation function hsv_to_rgb
     """
     print('Testing hsv_to_rgb')
-    # ADD TESTS TO ME
 
+    # test if hi = 0 and long decimals for s and v
+    hsv = introcs.HSV(30.0, 0.9999999, 0.2852332432432)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(73, rgb.red)
+    introcs.assert_equals(36, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # if hi = 1 and w/ long h decimal
+    hsv = introcs.HSV(90.54192121, 0.5, 0.5)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(95, rgb.red)
+    introcs.assert_equals(128, rgb.green)
+    introcs.assert_equals(64, rgb.blue)
+
+    # if hi = 2 and small values for s v
+    hsv = introsc.HSV(150.0,0.0019334,0.00123)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # if hi = 3
+    hsv = introsc.HSV(210.0, 0.5, 0.5)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(64, rgb.red)
+    introcs.assert_equals(96, rgb.green)
+    introcs.assert_equals(128, rgb.blue)
+
+    # if hi = 4
+    hsv = introsc.HSV(270.0, 1.0, 1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(128, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # if hi = 4 with f not 0
+    hsv = introsc.HSV(270.825959594, 1.0, 0.7233333)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(95, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(184, rgb.blue)
+
+    # if hi = 5 at almost 360
+    hsv = introsc.HSV(359.999.0, 1.0, 1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # make sure f is done right when near 0
+    hsv = introsc.HSV(1.0, 1.0, 1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(4, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # make sure f remainder is done right when near end of a 60 range
+    hsv = introsc.HSV(59.0,1.0,1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(251, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # hi = 1 f near 0
+    hsv = introcs.HSV(61.0, 1.0, 1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(251, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # hi = 2 f near 1
+    hsv = introcs.HSV(179.0, 1.0, 1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(251, rgb.blue)
+
+    # hi = 5 f near 1
+    hsv = introcs.HSV(359.0, 1.0, 1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(4, rgb.blue)
+
+    # make sure value and hue calc works (should get same thing)
+    hsv = introcs.HSV(0.0, 0.0, 0.6)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(153, rgb.red)
+    introcs.assert_equals(153, rgb.green)
+    introcs.assert_equals(153, rgb.blue)
+
+    #again
+    hsv = introcs.HSV(120.0, 0.0, 0.6)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(153, rgb.red)
+    introcs.assert_equals(153, rgb.green)
+    introcs.assert_equals(153, rgb.blue)
+
+    # again
+    hsv = introcs.HSV(180.0, 0.0, 1.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # Rounding
+    hsv = introcs.HSV(180.0, 0.502, 0.502)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(64, rgb.red)
+    introcs.assert_equals(128, rgb.green)
+    introcs.assert_equals(128, rgb.blue)
 
 def test_contrast_value():
     """
@@ -469,7 +655,6 @@ def test_contrast_rgb():
     introcs.assert_equals(123, rgb.blue)
 
     # ADD TWO MORE TESTS
-
 
 # Script Code
 # THIS PREVENTS THE TESTS RUNNING ON IMPORT
