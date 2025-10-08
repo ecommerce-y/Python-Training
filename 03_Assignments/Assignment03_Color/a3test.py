@@ -42,10 +42,10 @@ def test_str5():
     # Rounding down a 5 char input
     introcs.assert_equals('130.5',  a3.str5(130.54))
 
-    # Expanding 4 charachter input to 5
+    # Expanding 4 char input to 5
     introcs.assert_equals('100.0',  a3.str5(100))
 
-    # Rounding up another 6 character input (round-up from 6)
+    # Rounding up another 6 char input (round-up from 6)
     introcs.assert_equals('100.6',  a3.str5(100.56))
 
     # Rounding up a 7 character input with rounding up happening in index 4
@@ -134,8 +134,10 @@ def test_str5():
 
     # testing 3 character length with decimal
     introcs.assert_equals('1.000', a3.str5(1.0))
+
     # testing 2 character length with decimal
     introcs.assert_equals('0.100', a3.str5(0.1))
+
     # testing 4 character length with decimal
     introcs.assert_equals('1.000', a3.str5(1.00))
 
@@ -200,6 +202,7 @@ def test_rgb_to_cmyk():
 
     # The function should guarantee accuracy to three decimal places
 
+    # makes sure function will handle dv 0 w/ the k will (255/255 = 1)
     rgb = introcs.RGB(255, 255, 255)
     cmyk = a3.rgb_to_cmyk(rgb)
     introcs.assert_equals(0.0, round(cmyk.cyan,3))
@@ -214,6 +217,7 @@ def test_rgb_to_cmyk():
     introcs.assert_equals(0.0, round(cmyk.yellow,3))
     introcs.assert_equals(100.0, round(cmyk.black,3))
 
+    # making sure riunding works accurately
     rgb = introcs.RGB(217, 43, 164)
     cmyk = a3.rgb_to_cmyk(rgb)
     introcs.assert_equals(0.0, round(cmyk.cyan,3))
@@ -221,21 +225,162 @@ def test_rgb_to_cmyk():
     introcs.assert_equals(24.424, round(cmyk.yellow,3))
     introcs.assert_equals(14.902, round(cmyk.black,3))
 
-    # making sure div by 0 doesnt break it
-    rgb = introcs.RBG(1, 1, 1)
-    cmyk = a3.rgb_to_cmyk(rbg)
+    rgb = introcs.RGB(1, 1, 1)
+    cmyk = a3.rgb_to_cmyk(rgb)
+    introcs.assert_equals(0.0, round(cmyk.cyan,3))
+    introcs.assert_equals(0.0, round(cmyk.magenta,3))
+    introcs.assert_equals(0.0, round(cmyk.yellow,3))
+    introcs.assert_equals(99.608, round(cmyk.black,3))
+
+    # testing a 2-way tie
+    rgb = introcs.RGB(255, 255, 0)
+    cmyk = a3.rgb_to_cmyk(rgb)
+    introcs.assert_equals(0.0, round(cmyk.cyan,3))
+    introcs.assert_equals(0.0, round(cmyk.magenta,3))
+    introcs.assert_equals(100.0, round(cmyk.yellow,3))
+    introcs.assert_equals(0.0, round(cmyk.black,3))
+
+    # testing another 2-way tie
+    rgb = introcs.RGB(0, 255, 255)
+    cmyk = a3.rgb_to_cmyk(rgb)
+    introcs.assert_equals(100.0, round(cmyk.cyan,3))
+    introcs.assert_equals(0.0, round(cmyk.magenta,3))
+    introcs.assert_equals(0.0, round(cmyk.yellow,3))
+    introcs.assert_equals(0.0, round(cmyk.black,3))
+
+    # testing another 2 way tie combo
+    rgb = introcs.RGB(255, 0, 255)
+    cmyk = a3.rgb_to_cmyk(rgb)
     introcs.assert_equals(0.000, round(cmyk.cyan,3))
-    introcs.assert_equals(0.000, round(cmyk.magenta,3))
+    introcs.assert_equals(100.0, round(cmyk.magenta,3))
     introcs.assert_equals(0.000, round(cmyk.yellow,3))
-    introcs.assert_equals(100.0, round(cmyk.black,3))
+    introcs.assert_equals(0.000, round(cmyk.black,3))
+
+    # testing conversion with just black
+    rgb = introcs.RGB(0, 0, 26)
+    cmyk = a3.rgb_to_cmyk(rgb)
+    introcs.assert_equals(100.0, round(cmyk.cyan,3))
+    introcs.assert_equals(100.0, round(cmyk.magenta,3))
+    introcs.assert_equals(0.0, round(cmyk.yellow,3))
+    introcs.assert_equals(89.804, round(cmyk.black,3))
 
 def test_cmyk_to_rgb():
     """
     Test translation function cmyk_to_rgb
     """
     print('Testing cmyk_to_rgb')
-    # ADD TESTS TO ME
 
+    # black
+    cmyk = introcs.CMYK(0.0, 0.0, 0.0, 100.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # white
+    cmyk = introcs.CMYK(0.0, 0.0, 0.0, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # red
+    cmyk = introcs.CMYK(0.0, 100.0, 100.0, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # green
+    cmyk = introcs.CMYK(100.0, 0.0, 100.0, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # blue
+    cmyk = introcs.CMYK(100.0, 100.0, 0.0, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # cyan
+    cmyk = introcs.CMYK(100.0, 0.0, 0.0, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # magenta
+    cmyk = introcs.CMYK(0.0, 100.0, 0.0, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # yellow
+    cmyk = introcs.CMYK(0.0, 0.0, 100.0, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # test small numbers w/ decimals because of float rounding v truncation
+    cmyk = introcs.CMYK(1.00023, 72.20394, 33.2494, 0.00003)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(252, rgb.red)
+    introcs.assert_equals(71, rgb.green)
+    introcs.assert_equals(170, rgb.blue)
+
+    # everything at half to test if grey conversion works
+    cmyk = introcs.CMYK(50.0, 50.0, 50.0, 50.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(64, rgb.red)
+    introcs.assert_equals(64, rgb.green)
+    introcs.assert_equals(64, rgb.blue)
+
+    # values in the middle range of cmyk to test if everything works generally
+    cmyk = introcs.CMYK(20.0, 40.0, 80.0, 10.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(184, rgb.red)
+    introcs.assert_equals(138, rgb.green)
+    introcs.assert_equals(46, rgb.blue)
+
+    # all small decimal values to test rounding up to 255
+    cmyk = introcs.CMYK(0.001, 0.001, 0.001, 0.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # black near 100 to test rounding down to 0
+    cmyk = introcs.CMYK(0.0, 0.0, 0.0, 99.999)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+        # black just below 50 to test rounding
+    cmyk = introcs.CMYK(0.0, 0.0, 0.0, 49.999)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(128, rgb.red)
+    introcs.assert_equals(128, rgb.green)
+    introcs.assert_equals(128, rgb.blue)
+
+    # black at exactly 50 to test 1 – k from cmyk to rgb formula
+    cmyk = introcs.CMYK(0.0, 0.0, 0.0, 50.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(128, rgb.red)
+    introcs.assert_equals(128, rgb.green)
+    introcs.assert_equals(128, rgb.blue)
+
+    # black at 50 to test 1 – k from cmyk to rgb formula with other colors
+    cmyk = introcs.CMYK(10, 20.0, 30.0, 50.0)
+    rgb = a3.cmyk_to_rgb(cmyk)
+    introcs.assert_equals(115, rgb.red)
+    introcs.assert_equals(102, rgb.green)
+    introcs.assert_equals(89, rgb.blue)
 
 def test_rgb_to_hsv():
     """

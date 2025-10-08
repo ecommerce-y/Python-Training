@@ -39,14 +39,14 @@ def str5(value):
     Parameter value: the number to conver to a 5 character string.
     Precondition: value is a number (int or float), 0 <= value <= 360.
     """
-    value_str = str(value)
+    valueasstr = str(value)
 
-    if 'e' in value_str:
+    if 'e' in valueasstr:
         return '0.000'
-    elif len(value_str) == 5:
-        return value_str
-    elif len(value_str) > 5:
-        round_pos = 4 - value_str.index('.')
+    elif len(valueasstr) == 5:
+        return valueasstr
+    elif len(valueasstr) > 5:
+        round_pos = 4 - valueasstr.index('.')
         roundedresult = str(round(value,round_pos))
         if len(roundedresult) == 4:
             return roundedresult + '0'
@@ -59,30 +59,29 @@ def str5(value):
         else:
             return roundedresult
     else:
-        if len(value_str) == 4:
-            if '.' in value_str:
-                return value_str + '0'
+        if len(valueasstr) == 4:
+            if '.' in valueasstr:
+                return valueasstr + '0'
             else:
-                return value_str + '.' + '0'
-        elif len(value_str) == 3:
-            if '.' in value_str:
-                return value_str + '0' + '0'
+                return valueasstr + '.' + '0'
+        elif len(valueasstr) == 3:
+            if '.' in valueasstr:
+                return valueasstr + '0' + '0'
             else:
-                return value_str + '.' + '0'
-        elif len(value_str) == 2:
-            if '.' in value_str:
-                return value_str + '0' + '0' + '0'
+                return valueasstr + '.' + '0'
+        elif len(valueasstr) == 2:
+            if '.' in valueasstr:
+                return valueasstr + '0' + '0' + '0'
             else:
-                return value_str + '.' + '0' + '0'
+                return valueasstr + '.' + '0' + '0'
         else:  # len(value_str) == 1
-            if '.' in value_str:
-                return value_str + '0' + '0' + '0' + '0'
+            if '.' in valueasstr:
+                return valueasstr + '0' + '0' + '0' + '0'
             else:
-                return value_str + '.' + '0' + '0' + '0'
+                return valueasstr + '.' + '0' + '0' + '0'
 
     # Remember that the rounding takes place at a different place depending
     # on how big value is. Look at the examples in the specification.
-
 
 def str5_cmyk(cmyk):
     """
@@ -142,9 +141,9 @@ def rgb_to_cmyk(rgb):
     """
     # The RGB numbers are in the range 0..255.
     # Change them to the range 0..1 by dividing them by 255.0.
-    r = rgb.red / 255.0
-    g = rgb.green / 255.0
-    b = rgb.blue / 255.0
+    r = float(rgb.red / 255.0)
+    g = float(rgb.green / 255.0)
+    b = float(rgb.blue / 255.0)
     if r >= g and r >= b:
         mx = r
     elif g >= r and g >= b:
@@ -152,14 +151,14 @@ def rgb_to_cmyk(rgb):
     else:
         mx = b
     k = 1 - mx
-    try:
-        c = (1 - r - k) / (1 - k)
-        m = (1 - g - k) / (1 - k)
-        y = (1 - b - k) / (1 - k)
-    except:
+    if k == 1:
         c = 0.0
         m = 0.0
         y = 0.0
+    else:
+        c = (1 - r - k) / (1 - k)
+        m = (1 - g - k) / (1 - k)
+        y = (1 - b - k) / (1 - k)
     c = c * 100
     m = m * 100
     y = y * 100
@@ -177,10 +176,14 @@ def cmyk_to_rgb(cmyk):
     """
     # The CMYK numbers are in the range 0.0..100.0.
     # Deal with them the same way as the RGB numbers in rgb_to_cmyk()
-    r = 255 * (1 - cmyk.cyan) * (1 - cmyk.black)
-    g = 255 * (1 - cmyk.magenta) * (1 - cmyk.magenta)
-    b = 255 * (1 - cmyk.yellow) * (1 - cmyk.black)
-    return introcs.RGB(r, g, b)
+    c = cmyk.cyan / 100
+    m = cmyk.magenta / 100
+    y = cmyk.yellow / 100
+    k = cmyk.black / 100
+    r = round(255 * (1 - c) * (1 - k))
+    g = round(255 * (1 - m) * (1 - k))
+    b = round(255 * (1 - y) * (1 - k))
+    return introcs.RGB(int(r), int(g), int(b))
 
 def rgb_to_hsv(rgb):
     """
@@ -193,7 +196,6 @@ def rgb_to_hsv(rgb):
     """
     # The RGB numbers are in the range 0..255.
     # Change them to range 0..1 by dividing them by 255.0.
-    pass
 
 
 def hsv_to_rgb(hsv):
