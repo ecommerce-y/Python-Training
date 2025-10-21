@@ -24,8 +24,18 @@ def replace(thelist,a,b):
     Precondition: b is an int
     """
     # HINT: Divide and conquer only applies to one of the arguments, not all three
-    return [] # Stub return.  Replace this.
+    if len(thelist) == 0:
+        return thelist
+    elif len(thelist) == 1:
+        if thelist[0] == a:
+            return [b]
+        else:
+            return thelist
 
+    left = replace([thelist[0]],a,b)
+    right = replace(thelist[1:],a,b)
+
+    return left + right
 
 def oddsevens(thelist):
     """
@@ -45,8 +55,17 @@ def oddsevens(thelist):
     # make it almost impossible to combine the answer together.
     # However, if you look at all three examples in the specification you
     # will see a pattern that should help you define the recursion.
-    return [] # Stub return.  Replace this.
 
+    if len(thelist) == 0:
+        return thelist
+
+    left = thelist[0]
+    right = oddsevens(thelist[1:])
+
+    if left % 2 == 0:
+        return right + [left]
+    else:
+        return [left] + right
 
 ### OPTIONAL EXERCISES ###
 
@@ -55,16 +74,16 @@ def oddsevens(thelist):
 def separate(nlist):
     """
     Returns: A tuple separating nlist into negative and non-negative portions
-    
+
     This function returns a tuple (neg,pos). The value neg is a list of all of
     the negative elements of nlist (in their order from nlist), while pos is a
     list of all the positive elements of nlist (in their order from nlist).
-    
-    Examples: 
+
+    Examples:
         separate([1, -1, 2, -5, -3, 0]) returns ([-1, -5, -3], [1, 2, 0])
         separate([-1, -5, -3]) returns ([-1, -5, -3],[])
         separate([1, 2, 0]) returns ([],[1, 2, 0])
-        
+
     Parameter nlist: The list to separate
     Precondition: nlist is a (possibly empty) list of numbers
     """
@@ -139,14 +158,14 @@ def into(n, c):
 def namelist(p):
     """
     Returns a SORTED list of the first names any ancestor of p.
-    
+
     We say that some is an ancestor of p if
-        
+
         (1) They are either the mother or father of Persin p
         (2) They are an ancestor of the mother or father of p
-    
+
     If Person p has no known ancestors, this function returns the empty list
-    
+
     Parameter p: a person to
     Precondition: p is a Person object
     """
@@ -158,8 +177,8 @@ def related(p,q):
     """
     Returns True if Persons p and q are related; False otherwise.
 
-    We say that two people are related if they have a common person in their 
-    family tree (including themselves). A recursive way of saying this is that 
+    We say that two people are related if they have a common person in their
+    family tree (including themselves). A recursive way of saying this is that
     they are related if
 
         (1) they are the same person, or
