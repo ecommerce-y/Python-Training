@@ -87,7 +87,16 @@ def separate(nlist):
     Parameter nlist: The list to separate
     Precondition: nlist is a (possibly empty) list of numbers
     """
-    return ([],[]) # Stub return.  Replace this.
+    if len(nlist) == 0:
+        return ([],[])
+
+    left = nlist[0]
+    right = separate(nlist[1:])
+
+    if left < 0:
+        return ([left], [right])
+    elif left > 0:
+        return ([], [left] + [right])
 
 
 def flatten(thelist):
