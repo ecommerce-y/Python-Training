@@ -162,6 +162,7 @@ def test_str5():
     # a tie at the 3rd decimal
     introcs.assert_equals('12.35',  a3.str5(12.345))
 
+
 def test_str5_color():
     """
     Test the str5 functions for cmyk and hsv.
@@ -194,14 +195,12 @@ def test_str5_color():
     text = a3.str5_hsv(introcs.HSV(312.987654, 0.12345678, 0.0000499))
     introcs.assert_equals('(313.0, 0.123, 0.000)', text)
 
+
 def test_rgb_to_cmyk():
     """
     Test translation function rgb_to_cmyk
     """
     print('Testing rgb_to_cmyk')
-
-    # The function should guarantee accuracy to three decimal places
-
     # makes sure function will handle dv 0 w/ the k will (255/255 = 1)
     rgb = introcs.RGB(255, 255, 255)
     cmyk = a3.rgb_to_cmyk(rgb)
@@ -263,6 +262,7 @@ def test_rgb_to_cmyk():
     introcs.assert_equals(100.0, round(cmyk.magenta,3))
     introcs.assert_equals(0.0, round(cmyk.yellow,3))
     introcs.assert_equals(89.804, round(cmyk.black,3))
+
 
 def test_cmyk_to_rgb():
     """
@@ -382,6 +382,7 @@ def test_cmyk_to_rgb():
     introcs.assert_equals(102, rgb.green)
     introcs.assert_equals(89, rgb.blue)
 
+
 def test_rgb_to_hsv():
     """
     Test translation function rgb_to_hsv
@@ -408,7 +409,6 @@ def test_rgb_to_hsv():
     introcs.assert_equals(358.507, round(hsv.hue,3))
     introcs.assert_equals(0.788, round(hsv.saturation,3))
     introcs.assert_equals(1.0, round(hsv.value,3))
-
 
     # what if max = b
     rgb = introcs.RGB(50, 100, 200)
@@ -466,6 +466,7 @@ def test_rgb_to_hsv():
     introcs.assert_equals(0.0, round(hsv.saturation,3))
     introcs.assert_equals(0.502, round(hsv.value,3))
 
+
 def test_hsv_to_rgb():
     """
     Test translation function hsv_to_rgb
@@ -487,49 +488,49 @@ def test_hsv_to_rgb():
     introcs.assert_equals(64, rgb.blue)
 
     # if hi = 2 and small values for s v
-    hsv = introsc.HSV(150.0,0.0019334,0.00123)
+    hsv = introcs.HSV(150.0,0.0019334,0.00123)
     rgb = a3.hsv_to_rgb(hsv)
     introcs.assert_equals(0, rgb.red)
     introcs.assert_equals(0, rgb.green)
     introcs.assert_equals(0, rgb.blue)
 
     # if hi = 3
-    hsv = introsc.HSV(210.0, 0.5, 0.5)
+    hsv = introcs.HSV(210.0, 0.5, 0.5)
     rgb = a3.hsv_to_rgb(hsv)
     introcs.assert_equals(64, rgb.red)
     introcs.assert_equals(96, rgb.green)
     introcs.assert_equals(128, rgb.blue)
 
     # if hi = 4
-    hsv = introsc.HSV(270.0, 1.0, 1.0)
+    hsv = introcs.HSV(270.0, 1.0, 1.0)
     rgb = a3.hsv_to_rgb(hsv)
     introcs.assert_equals(128, rgb.red)
     introcs.assert_equals(0, rgb.green)
     introcs.assert_equals(255, rgb.blue)
 
     # if hi = 4 with f not 0
-    hsv = introsc.HSV(270.825959594, 1.0, 0.7233333)
+    hsv = introcs.HSV(270.825959594, 1.0, 0.7233333)
     rgb = a3.hsv_to_rgb(hsv)
     introcs.assert_equals(95, rgb.red)
     introcs.assert_equals(0, rgb.green)
     introcs.assert_equals(184, rgb.blue)
 
     # if hi = 5 at almost 360
-    hsv = introsc.HSV(359.999.0, 1.0, 1.0)
+    hsv = introcs.HSV(359.999, 1.0, 1.0)
     rgb = a3.hsv_to_rgb(hsv)
     introcs.assert_equals(255, rgb.red)
     introcs.assert_equals(0, rgb.green)
     introcs.assert_equals(0, rgb.blue)
 
     # make sure f is done right when near 0
-    hsv = introsc.HSV(1.0, 1.0, 1.0)
+    hsv = introcs.HSV(1.0, 1.0, 1.0)
     rgb = a3.hsv_to_rgb(hsv)
     introcs.assert_equals(255, rgb.red)
     introcs.assert_equals(4, rgb.green)
     introcs.assert_equals(0, rgb.blue)
 
     # make sure f remainder is done right when near end of a 60 range
-    hsv = introsc.HSV(59.0,1.0,1.0)
+    hsv = introcs.HSV(59.0,1.0,1.0)
     rgb = a3.hsv_to_rgb(hsv)
     introcs.assert_equals(255, rgb.red)
     introcs.assert_equals(251, rgb.green)
@@ -583,6 +584,14 @@ def test_hsv_to_rgb():
     introcs.assert_equals(64, rgb.red)
     introcs.assert_equals(128, rgb.green)
     introcs.assert_equals(128, rgb.blue)
+
+    # make sure value calc overrides hue and saturation to get black
+    hsv = introcs.HSV(45.0, 0.8, 0.0)
+    rgb = a3.hsv_to_rgb(hsv)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
 
 def test_contrast_value():
     """
@@ -649,12 +658,123 @@ def test_contrast_rgb():
 
     # Darkening (less than 0.5) contrast
     rgb = introcs.RGB(240, 15, 118)
-    hsv = a3.contrast_rgb(rgb,0.3)
+    a3.contrast_rgb(rgb,0.3)
     introcs.assert_equals(220, rgb.red)
-    introcs.assert_equals(35,  rgb.green)
+    introcs.assert_equals(35, rgb.green)
     introcs.assert_equals(123, rgb.blue)
 
-    # ADD TWO MORE TESTS
+    # testing contrast = 0.5
+    rgb = introcs.RGB(12, 255, 0)
+    a3.contrast_rgb(rgb, 0.5)
+    introcs.assert_equals(12, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # testing contrast > 0.5 (brightening)
+    rgb = introcs.RGB(255, 0, 12)
+    a3.contrast_rgb(rgb, 0.7)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(5, rgb.blue)
+
+    # testing contrast = 1 rgb go to 0
+    rgb = introcs.RGB(0, 51, 102)
+    a3.contrast_rgb(rgb, 1.0)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # testing contrast = 1 rgb go to 255
+    rgb = introcs.RGB(140, 178, 255)
+    a3.contrast_rgb(rgb, 1.0)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # testing contrast = 0 rgb go to middle
+    rgb = introcs.RGB(0, 255, 128)
+    a3.contrast_rgb(rgb, 0.0)
+    introcs.assert_equals(128, rgb.red)
+    introcs.assert_equals(128, rgb.green)
+    introcs.assert_equals(128, rgb.blue)
+
+    # rgb at 0 without contrast
+    rgb = introcs.RGB(0, 0, 0)
+    a3.contrast_rgb(rgb,0.5)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # rgb at 0 at bottom part of sawtooth
+    rgb = introcs.RGB(0, 0, 0)
+    a3.contrast_rgb(rgb,0.25)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # rgb at 0 at upper part of sawtooth
+    rgb = introcs.RGB(0, 0, 0)
+    a3.contrast_rgb(rgb,0.75)
+    introcs.assert_equals(0, rgb.red)
+    introcs.assert_equals(0, rgb.green)
+    introcs.assert_equals(0, rgb.blue)
+
+    # rgb at max without contrast
+    rgb = introcs.RGB(255, 255, 255)
+    a3.contrast_rgb(rgb,0.5)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # rgb at max with contrast at upper part
+    rgb = introcs.RGB(255, 255, 255)
+    a3.contrast_rgb(rgb,0.75)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # rgb at max with contrast at lower part
+    rgb = introcs.RGB(255, 255, 255)
+    a3.contrast_rgb(rgb,0.25)
+    introcs.assert_equals(255, rgb.red)
+    introcs.assert_equals(255, rgb.green)
+    introcs.assert_equals(255, rgb.blue)
+
+    # contrast at bottom part of sawtooth
+    rgb = introcs.RGB(13, 20, 28)
+    a3.contrast_rgb(rgb,0.25)
+    introcs.assert_equals(39, rgb.red)
+    introcs.assert_equals(60, rgb.green)
+    introcs.assert_equals(84, rgb.blue)
+
+    # testing middle of sawtooth
+    rgb = introcs.RGB(90, 110, 105)
+    a3.contrast_rgb(rgb, 0.3)
+    introcs.assert_equals(111, rgb.red)
+    introcs.assert_equals(120, rgb.green)
+    introcs.assert_equals(118, rgb.blue)
+
+    # testing upper part of sawtooth
+    rgb = introcs.RGB(220, 235, 225)
+    a3.contrast_rgb(rgb, 0.35)
+    introcs.assert_equals(190, rgb.red)
+    introcs.assert_equals(218, rgb.green)
+    introcs.assert_equals(199, rgb.blue)
+
+    # testing bottom of sawtooth
+    rgb = introcs.RGB(20, 30, 25)
+    a3.contrast_rgb(rgb, 0.65)
+    introcs.assert_equals(11, rgb.red)
+    introcs.assert_equals(16, rgb.green)
+    introcs.assert_equals(13, rgb.blue)
+
+    # testing contrast > 0.5 (middle of sawtooth)
+    rgb = introcs.RGB(95, 115, 105)
+    a3.contrast_rgb(rgb, 0.75)
+    introcs.assert_equals(32, rgb.red)
+    introcs.assert_equals(90, rgb.green)
+    introcs.assert_equals(60, rgb.blue)
+
 
 # Script Code
 # THIS PREVENTS THE TESTS RUNNING ON IMPORT

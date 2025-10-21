@@ -80,8 +80,6 @@ def str5(value):
             else:
                 return valueasstr + '.' + '0' + '0' + '0'
 
-    # Remember that the rounding takes place at a different place depending
-    # on how big value is. Look at the examples in the specification.
 
 def str5_cmyk(cmyk):
     """
@@ -160,6 +158,7 @@ def rgb_to_cmyk(rgb):
     k = k * 100
     return introcs.CMYK(c, m, y, k)
 
+
 def cmyk_to_rgb(cmyk):
     """
     Returns an RGB object equivalent to cmyk
@@ -179,6 +178,7 @@ def cmyk_to_rgb(cmyk):
     g = round(255 * (1 - m) * (1 - k))
     b = round(255 * (1 - y) * (1 - k))
     return introcs.RGB(int(r), int(g), int(b))
+
 
 def rgb_to_hsv(rgb):
     """
@@ -215,6 +215,7 @@ def rgb_to_hsv(rgb):
         s = 1 - (mn / mx)
 
     return introcs.HSV(h, s, v)
+
 
 def hsv_to_rgb(hsv):
     """
@@ -266,6 +267,7 @@ def hsv_to_rgb(hsv):
     b = int(round(b * 255))
     return introcs.RGB(r, g, b)
 
+
 def contrast_value(value,contrast):
     """
     Returns value adjusted to the "sawtooth curve" for the given contrast
@@ -281,7 +283,19 @@ def contrast_value(value,contrast):
     Parameter contrast: the contrast amount (0.5 is no contrast)
     Precondition: contrast is a float in 0..1
     """
-    pass
+    m = 2 * contrast - 1
+    if contrast == 1:
+        if value >= 0.5:
+            y = 1
+        else:
+            y = 0
+    elif value < 0.25 + 0.25 * m:
+        y = value * ((1-m) / (1+m))
+    elif value > 0.75 - 0.25 * m:
+        y = ((1-m) / (1+m)) * (value - ((3 - m) / 4)) + ((3 + m) / 4)
+    else:
+        y = ((1 + m) / (1 - m)) * (value - ((1 + m) / 4)) + ((1 - m) / 4)
+    return y
 
 
 def contrast_rgb(rgb,contrast):
@@ -297,4 +311,12 @@ def contrast_rgb(rgb,contrast):
     Parameter contrast: the contrast amount (0.5 is no contrast)
     Precondition: contrast is a float in 0..1
     """
-    pass
+    r = float(rgb.red / 255.0)
+    g = float(rgb.green / 255.0)
+    b = float(rgb.blue / 255.0)
+    cr = int(round(contrast_value(r, contrast) * 255))
+    cg = int(round(contrast_value(g, contrast) * 255))
+    cb = int(round(contrast_value(b, contrast) * 255))
+    rgb.red   = cr
+    rgb.green = cg
+    rgb.blue  = cb
